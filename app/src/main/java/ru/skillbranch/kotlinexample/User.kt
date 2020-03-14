@@ -33,7 +33,7 @@ class User private constructor(
     private var _login: String? = null
     var login: String
         set(value) {
-            _login = value?.toLowerCase()
+            _login = value.toLowerCase()
         }
         get() = _login!!
 
@@ -66,6 +66,7 @@ class User private constructor(
         println("Secondary phone constructor")
         val code = generateAccessCode()
         passwordHash = encrypt(code)
+        println("Phone passwordHash is $passwordHash")
         accessCode = code
         sendAccessCodeToUser(rawPhone, code)
     }
@@ -74,7 +75,7 @@ class User private constructor(
         println("First init block, primary constructor was called")
 
         check(!firstName.isBlank()) {"FirstName must be not blank"}
-        check(email.isNullOrBlank() || rawPhone.isNullOrBlank()) {"Email or phone must be not blank"}
+        check(email.isNullOrBlank() || rawPhone.isNullOrBlank()) {"Email or phone must not be null or blank"}
 
         phone = rawPhone
         login = email ?: phone!!
@@ -91,16 +92,34 @@ class User private constructor(
         """.trimIndent()
     }
 
-    fun checkPassword(pass:String) = encrypt(pass) == passwordHash
+    fun checkPassword(pass:String) = encrypt(pass) == passwordHash.also{
+        println("Checking passwordHash is $passwordHash")
+    }
 
     fun changePassword(oldPass:String, newPass:String){
-        if (checkPassword(oldPass)) passwordHash = encrypt(newPass)
+        if (checkPassword(oldPass)) {
+            passwordHash = encrypt(newPass)
+            if (!accessCode.isNullOrEmpty()) accessCode = newPass
+            println("Password $oldPass has been changed on new password $newPass")
+        }
         else throw IllegalArgumentException("The entered password does not match the current password")
+    }
+
+    fun changeAccessCode(newAccessCode: String){
+        passwordHash = encrypt(newAccessCode)
     }
 
     private fun encrypt(password: String): String = salt.plus(password).md5()
 
-    private fun generateAccessCode(): String {
+    private fun String.md5(): String{
+        val md = MessageDigest.getInstance("MD5")
+        val digest = md.digest(toByteArray()) //16 byte
+        val hexString = BigInteger(1, digest).toString(16)
+        return hexString.padStart(32, '0')
+    }
+
+
+    fun generateAccessCode(): String {
         val possible = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890"
 
         return StringBuilder().apply {
@@ -112,15 +131,8 @@ class User private constructor(
         }.toString()
     }
 
-    private fun sendAccessCodeToUser(phone: String, code: String) {
+    fun sendAccessCodeToUser(phone: String, code: String) {
         println("...... sending access code: $code on $phone")
-    }
-
-    private fun String.md5(): String{
-        val md = MessageDigest.getInstance("MD5")
-        val digest = md.digest(toByteArray()) //16 byte
-        val hexString = BigInteger(1, digest).toString(16)
-        return hexString.padStart(32, '0')
     }
 
     companion object Factory{
