@@ -184,4 +184,12 @@ class ExampleUnitTest {
         Assert.assertNotEquals(oldAccess, user.accessCode!!)
         Assert.assertEquals(expectedInfo, successResult)
     }
+
+    @Test
+    fun foo(){
+        val holder = UserHolder
+        holder.registerUserByPhone("John Doe", "+7 (917) 971-11-11")
+        val mapString = holder.map.keys
+        print(mapString)
+    }
 }
