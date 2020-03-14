@@ -3,7 +3,7 @@ package ru.skillbranch.kotlinexample
 import androidx.annotation.VisibleForTesting
 
 object UserHolder {
-    private val map = mutableMapOf<String, User>()
+    val map = mutableMapOf<String, User>()
 
     fun registerUser(
         fullName:String,
@@ -12,7 +12,7 @@ object UserHolder {
     ):User{
         val user = User.makeUser(fullName, email=email, password=password)
         //проверка на существующий email
-        return if (map[email] == null) {
+        return if (map[user.login] == null) {
             user.also{map[it.login] = it}
         }
         else{
@@ -23,15 +23,15 @@ object UserHolder {
     }
 
     fun registerUserByPhone(fullName: String, rawPhone: String) : User {
-        val user = User.makeUser(fullName, rawPhone)
         //проверка на валидный телефон
         val isFirstPlus = rawPhone.first() == '+'  //первый плюс
-        val is11digits = rawPhone.replace("""^\d""".toRegex(), "").length == 11 //содержит 11 цифр
-        val containsLetters = rawPhone.contains("""\w""".toRegex())
-        return if (isFirstPlus and is11digits and !containsLetters){
+        val is11digits = rawPhone.replace("""\D""".toRegex(), "").length == 11 //содержит 11 цифр
+        val isNoLetters = rawPhone.contains("""[^a-zA-Zа-яА-я]""".toRegex())
+        return if (isFirstPlus and is11digits and isNoLetters){
+            val user = User.makeUser(fullName, phone = rawPhone)
             //проверка на существующий телефон
             if(map[rawPhone] == null){
-                user.also { map[it.login] = it }
+                user.also { map[rawPhone] = it }
             }
             else{
                 throw IllegalArgumentException("A user with this phone already exists")
