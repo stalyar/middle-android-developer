@@ -16,7 +16,7 @@ import ru.skillbranch.skillarticles.viewmodels.ArticleState
 import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.Notify
 import ru.skillbranch.skillarticles.viewmodels.ViewModelFactory
-stopped at 55 min
+
 class RootActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ArticleViewModel
@@ -26,20 +26,10 @@ class RootActivity : AppCompatActivity() {
         setContentView(R.layout.activity_root)
         setupToolbar()
         setupBottombar()
-        //setupSubmenu()
-
-        btn_like.setOnClickListener{
-            Snackbar.make(coordinator_container, "test", Snackbar.LENGTH_LONG)
-                .setAnchorView(bottombar)
-                .show()
-        }
+        setupSubmenu()
 
 
-        switch_mode.setOnClickListener{
-            delegate.localNightMode = if (switch_mode.isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-        }
 
-/*
         val vmFactory = ViewModelFactory("0")
         viewModel = ViewModelProviders.of(this, vmFactory).get(ArticleViewModel::class.java)
         viewModel.observeState(this){
@@ -49,7 +39,7 @@ class RootActivity : AppCompatActivity() {
 
         viewModel.observeNotifications(this){
             renderNotification(it)
-        }*/
+        }
     }
 
     private fun setupToolbar(){
@@ -69,7 +59,7 @@ class RootActivity : AppCompatActivity() {
     private fun renderUi(data: ArticleState){
         //bind submenu state
         btn_settings.isChecked = data.isShowMenu
-        //if (data.isShowMenu) submenu.open() else submenu.close()
+        if (data.isShowMenu) submenu.open() else submenu.close()
 
         //bind article person data
         btn_like.isChecked = data.isLike
@@ -79,17 +69,17 @@ class RootActivity : AppCompatActivity() {
         switch_mode.isChecked = data.isDarkMode
         delegate.localNightMode = if (data.isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         if (data.isBigText){
-            //tv_text_content.textSize = 18f
+            tv_text_content.textSize = 18f
             btn_text_up.isChecked = true
             btn_text_down.isChecked = false
         } else{
-            //tv_text_content.textSize = 14f
+            tv_text_content.textSize = 14f
             btn_text_up.isChecked = false
             btn_text_down.isChecked = true
         }
 
         //bind content
-        //tv_text_content.text = if (data.isLoadingContent) "loading" else data.content.first() as String
+        tv_text_content.text = if (data.isLoadingContent) "loading" else data.content.first() as String
 
         //bind toolbar
         toolbar.title = data.title ?: "Skill Articles"
@@ -99,6 +89,7 @@ class RootActivity : AppCompatActivity() {
 
     private fun renderNotification(notify: Notify){
         val snackbar = Snackbar.make(coordinator_container, notify.message, Snackbar.LENGTH_LONG)
+            .setAnchorView(bottombar)
 
         when(notify){
             is Notify.TextMessage -> {/*nothing*/}
