@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
 import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
 import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
-import ru.skillbranch.skillarticles.extensions.indexes
+import ru.skillbranch.skillarticles.extensions.indexesOf
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
@@ -138,7 +137,7 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
     override fun handleSearch(query: String?){
         query ?: return
         val result = (currentState.content.firstOrNull() as? String)
-            .indexes(query)
+            .indexesOf(query)
             .map{it to it + query.length}
         updateState{it.copy(searchQuery = query, searchResults =  result, searchPosition = 0)}
     }
