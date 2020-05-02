@@ -6,7 +6,7 @@ import kotlin.collections.ArrayList
 
 fun String?.indexesOf(substr: String, ignoreCase: Boolean = true) : List<Int>{
 
-    if (this==null || this.length<substr.length) return listOf()
+    if (this==null || this.length<substr.length || substr=="") return listOf()
 
     var str = this
     var _substr = substr
