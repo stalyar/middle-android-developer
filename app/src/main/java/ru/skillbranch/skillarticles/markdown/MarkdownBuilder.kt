@@ -90,7 +90,12 @@ class MarkdownBuilder(context: Context) {
                     }
                 }
                 is Element.Rule -> {
-                    inSpans(HorizontalRuleSpan(colorOnSurface, colorSurface, cornerRadius, gap)){
+                    inSpans(HorizontalRuleSpan(ruleWidth, colorDivider)){
+                        append(element.text)
+                    }
+                }
+                is Element.InlineCode -> {
+                    inSpans(InlineCodeSpan(colorOnSurface, colorSurface, cornerRadius, gap)){
                         append(element.text)
                     }
                 }
