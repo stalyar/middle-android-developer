@@ -23,7 +23,9 @@ fun Context.dpToIntPx(dp: Int): Int {
     ).toInt()
 }
 
-fun Context.attrValue(attr:Int){}
+fun Context.attrValue(attr:Int) : Int{
+    return attr;
+}
 
 val Context.isNetworkAvailable: Boolean
     get() {

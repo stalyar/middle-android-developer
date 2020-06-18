@@ -273,7 +273,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
                 .run{
                     tv_text_content.setText(this, TextView.BufferType.SPANNABLE)
                 }
-            tv_text_content.movementMethod = LinkMovementMethod().getInstance()
+            tv_text_content.movementMethod = LinkMovementMethod.getInstance()
         }
 
         override fun onFinishInflate() {

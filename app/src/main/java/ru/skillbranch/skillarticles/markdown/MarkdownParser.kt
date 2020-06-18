@@ -1,5 +1,7 @@
 package ru.skillbranch.skillarticles.markdown
 
+import android.util.Log
+import java.lang.StringBuilder
 import java.util.regex.Pattern
 
 object MarkdownParser {
@@ -10,12 +12,12 @@ object MarkdownParser {
     private const val UNORDERED_LIST_ITEM_GROUP = "(^[*+-] .+$)"
     private const val HEADER_GROUP = "(^#{1,6} .+?$)"
     private const val QUOTE_GROUP = "(^> .+?$)"
-    private const val ITALIC_GROUP = "((?<!\\*)\\*[^*].*?[^*]?\\*(?!\\*)|(?<!_)_[^*].*?[^*]?_(?!_))"
-    private const val BOLD_GROUP ="((?<!\\*)\\*{2}[^*].*?[^*]?\\*{2}(?!\\*)|(?<!_)_{2}[^*].*?[^*]?_{2}(?!_))"
-    private const val STRIKE_GROUP = "((?<!~)~{2}[^*].*?[^*]?~{2}(?!~)"
+    private const val ITALIC_GROUP = "((?<!\\*)\\*[^*].*?[^*]?\\*(?!\\*)|(?<!_)_[^_].*?[^_]?_(?!_))"
+    private const val BOLD_GROUP ="((?<!\\*)\\*{2}[^*].*?[^*]?\\*{2}(?!\\*)|(?<!_)_{2}[^_].*?[^_]?_{2}(?!_))"
+    private const val STRIKE_GROUP = "((?<!~)~{2}[^*].*?[^*]?~{2}(?!~))"
     private const val RULE_GROUP = "(^[-_*]{3}$)"
     private const val INLINE_GROUP = "((?<!`)`[^`\\s].*?[^`\\s]?`(?!`))"
-    private const val LINK_GROUP = ""
+    private const val LINK_GROUP = "(\\[[^\\[\\]]*?]\\(.+?\\)|^\\[*?]\\(.*?\\))"
     private const val BLOCK_CODE_GROUP = "" //TODO implement me
     private const val ORDER_LIST_GROUP = "" //TODO implement me
 
@@ -39,7 +41,133 @@ object MarkdownParser {
      * clear markdown text to string without markdown characters
      */
     fun clear(string: String?): String? {
-        //TODO implement me
+        if (string!=null) {
+            val sb = StringBuilder("")
+            var continueNum = 0
+            outerloop@
+            for (i in string.indices){
+                if (continueNum > 0){
+                    continueNum--
+                    continue
+                }
+
+
+                //если символы '-' поодиночке, то оставляем
+                if (i > 0 && i < string.length && string[i - 1].toInt() != 10){
+                    val char = string[i]
+                    var isSingle = true
+                    if (char == '-' || char == '_') {
+                        var j = i + 1
+                        var k = i - 1
+                         while (string[j].toInt() != 10 && j < string.length - 1){
+                            if (string[j] == char) isSingle = false
+                            else j++
+                        }
+                        while (string[k].toInt() != 10 && k != 1){
+                            if (string[k] == char) isSingle = false
+                            else k--
+                        }
+                        if (isSingle){
+                            sb.append(char)
+                            continue
+                        }
+                    }
+                }
+
+                //проверка на ссылки
+                if (string[i] == '['){
+                    var j = i + 1
+                    while (string[j].toInt() != 10 && j < string.length){
+                        if (string[j] == ']' && string[j + 1] == '('){
+                            var k = j + 1
+                            while (string[k].toInt() != 10 && k < string.length){
+                                if (string[k] == ')') continue@outerloop
+                                else k++
+                            }
+                        }
+                        j++
+                    }
+                }
+                if (string[i] == ']'){
+                    var j = i - 1
+                    while (string[j].toInt() != 10 && j != 0){
+                        if (string[j] == '[' && string[i + 1] == '('){
+                            var k = i + 1
+                            while (string[k].toInt() != 10 && k < string.length){
+                                if (string[k] == ')') {
+                                    continueNum = k - i
+                                    continue@outerloop
+                                }
+                                else k++
+                            }
+                        }
+                        j--
+                    }
+                }
+
+
+                //проверка на тройные знаки
+                if (i < string.length - 3) {
+                    //если ___ --- ***
+                    if (string[i] == '_' && string[i + 1] == '_' && string[i + 2] == '_' ||
+                        string[i] == '-' && string[i + 1] == '-' && string[i + 2] == '-' ||
+                        string[i] == '*' && string[i + 1] == '*' && string[i + 2] == '*'){
+                        continueNum = 2
+                        sb.append(" ")
+                        continue
+                    }
+                    //если ```
+                    if (string[i] == '`' && string[i + 1] == '`' && string[i + 2] == '`') {
+                        continueNum = 2
+                        sb.append("```")
+                        continue
+                        }
+                }
+
+                //если символ #
+                if (string[i] == '#' || string[i] == '*' || string[i] == '_' || string[i] == '~' || string[i] == '-'
+                    || string[i] == '+' || string[i] == '>') continue
+                //
+                if (string[i] == ' ' && (string[i - 1] == '#' || string[i - 1] == '+' || string[i - 1] == '-' || string[i - 1] == '#'
+                            || string[i - 1] == '>' || string[i - 1] == '#')) continue
+
+                if (string[i] == ' ' && string[i - 1] == '*' && string[i - 2].toInt() == 10) continue
+
+                //для шаблона на пробельный символ
+                val str = if (i < string.length - 2) string.subSequence(i + 1, i + 2)
+                else if (i == string.length -2) string.last().toString()
+                else " "
+
+                //если символ ` и после любой непробельный символ
+                if (string[i] == '`' && Pattern.matches("\\S", str)){
+                    //то ищем есть ли еще ` до конца строки
+                    var j = i + 1
+                    while (string[j].toInt() != 10 && j != string.length){
+                        //если символ ` и перед любой непробельный символ
+                        val str1 = string.subSequence(j - 1, j)
+                        val c = string[j].toInt()
+                        if (string[j] == '`' && Pattern.matches("\\S", str1)) continue@outerloop
+                        else j++
+                    }
+                }
+                //если символ ` и перед любой непробельный символ
+                val str2 = if (i > 0) string.subSequence(i - 1, i) else "stub"
+                if (string[i] == '`' && Pattern.matches("\\S", str2)){
+                    //то ищем есть ли еще ` до начала строки
+                    var j = i - 1
+                    while (string[j].toInt() != 10 && j != -1){
+                        //если символ ` и после любой непробельный символ
+                        val str3 = if (j < string.length - 2) string.subSequence(j + 1, j + 2)
+                        else string.last().toString()
+                        if (string[j] == '`' && Pattern.matches("\\S", str3)) continue@outerloop
+                        else j--
+                    }
+                }
+                sb.append(string[i])
+
+                }
+            return sb.toString()
+            }
         return null
     }
 
@@ -63,7 +191,7 @@ object MarkdownParser {
             var text: CharSequence
 
             //groups range for iterate by groups (1..9) or (1..11) optionally
-            val groups = 1..11
+            val groups = 1..9
             var group = 1
             for (gr in groups){
                 if (matcher.group(gr) != null){
@@ -92,7 +220,7 @@ object MarkdownParser {
 
                 //HEADER
                 2 -> {
-                    val reg = "^#{1,6}$".toRegex().find(string.subSequence(startIndex, endIndex))
+                    val reg = "^#{1,6}".toRegex().find(string.subSequence(startIndex, endIndex))
                     val level = reg!!.value.length
 
                     //text without "{#} "
@@ -100,6 +228,7 @@ object MarkdownParser {
 
                     val element = Element.Header(level, text)
                     parents.add(element)
+                    lastStartIndex = endIndex
                 }
 
                 //QUOTE
