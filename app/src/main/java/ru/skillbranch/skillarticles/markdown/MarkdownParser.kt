@@ -41,6 +41,7 @@ object MarkdownParser {
      * clear markdown text to string without markdown characters
      */
     fun clear(string: String?): String? {
+        var count = 0
         if (string!=null) {
             val sb = StringBuilder("")
             var continueNum = 0
@@ -51,7 +52,6 @@ object MarkdownParser {
                     continue
                 }
 
-
                 //если символы '-' поодиночке, то оставляем
                 if (i > 0 && i < string.length && string[i - 1].toInt() != 10){
                     val char = string[i]
@@ -60,11 +60,17 @@ object MarkdownParser {
                         var j = i + 1
                         var k = i - 1
                          while (string[j].toInt() != 10 && j < string.length - 1){
-                            if (string[j] == char) isSingle = false
+                            if (string[j] == char){
+                                isSingle = false
+                                break
+                            }
                             else j++
                         }
                         while (string[k].toInt() != 10 && k != 1){
-                            if (string[k] == char) isSingle = false
+                            if (string[k] == char){
+                                isSingle = false
+                                break
+                            }
                             else k--
                         }
                         if (isSingle){
@@ -164,7 +170,6 @@ object MarkdownParser {
                     }
                 }
                 sb.append(string[i])
-
                 }
             return sb.toString()
             }

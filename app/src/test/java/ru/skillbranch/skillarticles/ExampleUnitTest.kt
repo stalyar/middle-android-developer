@@ -136,8 +136,8 @@ class ExampleUnitTest {
 
     @Test
     fun clear() {
-        val result = MarkdownParser.clear("""- exa: [li-n_k](www)""".trimMargin())
-        assertEquals("""exa: li-n_k""".trimIndent(),  result)
+        val result = MarkdownParser.clear("""012 _k_ 89""".trimMargin())
+        assertEquals("""012 k 89""".trimIndent(),  result)
     }
 
     //optionally (delete @Ignore fo run)

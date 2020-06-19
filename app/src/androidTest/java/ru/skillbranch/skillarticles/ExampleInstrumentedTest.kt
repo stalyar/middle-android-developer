@@ -50,7 +50,7 @@ class ExampleInstrumentedTest {
         }
     }
 
-    @Test
+    @Test //passed
     fun module1() {
         val content =
             """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nibh sapien, consectetur et ultrices quis, convallis sit amet augue. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum et convallis augue, eu hendrerit diam. Curabitur ut dolor at justo suscipit commodo. Curabitur consectetur, massa sed sodales sollicitudin, orci augue maximus lacus, ut elementum risus lorem nec tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent accumsan tempor lorem, quis pulvinar justo. Vivamus euismod risus ac arcu pharetra fringilla.
@@ -70,7 +70,7 @@ class ExampleInstrumentedTest {
         Assert.assertEquals(listOf<Int>(), actualIndexes)
     }
 
-    @Test
+    @Test //failed
     fun module2() {
         val scenario = ActivityScenario.launch(RootActivity::class.java)
         var actualBefore = 0
@@ -86,7 +86,7 @@ class ExampleInstrumentedTest {
         scenario.close()
     }
 
-    @Test
+    @Test //failed
     fun module3() {
         val scenario = ActivityScenario.launch(RootActivity::class.java)
         var actualBeforeBg = 0
@@ -110,14 +110,14 @@ class ExampleInstrumentedTest {
         scenario.close()
     }
 
-    @Test
+    @Test //failed
     fun module4() {
         val scenario = ActivityScenario.launch(RootActivity::class.java)
         var expectedData = ArticleState(
             isShowMenu = true,
             isBigText = true,
             isLoadingContent = false,
-            content = listOf("test content"),
+            content = "test content",
             isLike = true,
             isBookmark = true,
             title = "test title",
@@ -196,7 +196,7 @@ class ExampleInstrumentedTest {
         scenario.close()
     }
 
-    @Test
+    @Test //failed
     fun module5() {
         val scenario = ActivityScenario.launch(RootActivity::class.java)
         val content =
@@ -206,7 +206,7 @@ class ExampleInstrumentedTest {
         val searchResult = listOf(322 to 325, 930 to 933, 1032 to 1035, 1060 to 1063)
 
         scenario.onActivity { activity ->
-            activity.binding.bind(ArticleState().copy(content = listOf(content)))
+            activity.binding.bind(ArticleState().copy(content = content))
             activity.showSearchBar()
         }
         sleep(500)

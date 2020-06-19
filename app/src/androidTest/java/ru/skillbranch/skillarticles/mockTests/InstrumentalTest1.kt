@@ -24,7 +24,7 @@ import ru.skillbranch.skillarticles.markdown.spans.*
 @RunWith(AndroidJUnit4::class)
 class InstrumentedTest1 {
 
-    @Test
+    @Test //passed
     fun draw_list_item() {
         //settings
         val color = Color.RED
@@ -74,7 +74,7 @@ class InstrumentedTest1 {
         inOrder.verify(paint).color = defaultColor
     }
 
-    @Test
+    @Test //passed
     fun draw_quote() {
         //settings
         val color = Color.RED
@@ -126,7 +126,7 @@ class InstrumentedTest1 {
         inOrder.verify(paint).color = defaultColor
     }
 
-    @Test
+    @Test //passed
     fun draw_header() {
         //settings
         val levels = 1..6
@@ -205,7 +205,7 @@ class InstrumentedTest1 {
     }
 
 
-    @Test
+    @Test //passed
     fun draw_rule() {
         //settings
         val color = Color.RED
@@ -251,7 +251,7 @@ class InstrumentedTest1 {
     }
 
 
-    @Test
+    @Test //passed
     fun draw_inline_code() {
         //settings
         val textColor: Int = Color.RED
