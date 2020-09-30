@@ -12,6 +12,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.repositories.Element
+import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
 import ru.skillbranch.skillarticles.data.repositories.MarkdownParser
 import ru.skillbranch.skillarticles.extensions.attrValue
 import ru.skillbranch.skillarticles.extensions.dpToPx
@@ -39,7 +40,7 @@ class MarkdownBuilder(context: Context) {
         //val markdown = MarkdownParser.parse(string)
         return buildSpannedString {
             //markdown.elements.forEach{buildElement(it, this)}
-            textContent.elements.foreach{buildElement(it, this)}
+            textContent.elements.forEach{buildElement(it, this)}
         }
     }
 
@@ -115,6 +116,7 @@ class MarkdownBuilder(context: Context) {
                         append(element.text)
                     }
                 }
+                /*
                 is Element.BlockCode -> {
                     append(
                         element.text,
@@ -128,6 +130,7 @@ class MarkdownBuilder(context: Context) {
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                 }
+                */
                 is Element.OrderedListItem -> {
                     inSpans(OrderedListSpan(gap, element.order, colorSecondary)) {
                         for (child in element.elements){
