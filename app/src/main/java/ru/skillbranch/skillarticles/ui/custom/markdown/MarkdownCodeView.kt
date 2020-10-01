@@ -147,9 +147,9 @@ class MarkdownCodeView private constructor(
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     public override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var usedHeight = 0
-        var width = View.getDefaultSize(suggestedMinimumHeight, widthMeasureSpec)
+        val width = View.getDefaultSize(suggestedMinimumHeight, widthMeasureSpec)
         measureChild(sv_scroll, widthMeasureSpec, heightMeasureSpec)
-        measureChild(iv_copy, widthMeasureSpec, heightMeasureSpec)
+        //measureChild(iv_copy, widthMeasureSpec, heightMeasureSpec)
 
         usedHeight += sv_scroll.measuredHeight + paddingTop + paddingBottom
         setMeasuredDimension(width, usedHeight)

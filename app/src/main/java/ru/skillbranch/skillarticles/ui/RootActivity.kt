@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.search_view_layout.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
+import ru.skillbranch.skillarticles.extensions.hideKeyboard
 import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.custom.markdown.MarkdownBuilder
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
@@ -57,47 +58,6 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         setupToolbar()
         setupBottombar()
         setupSubmenu()
-    }
-
-    override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
-        val content = tv_text_content.text as Spannable
-
-        tv_text_content.isVisible
-        //clear entry search result
-        clearSearchResult()
-
-        searchResult.forEach{(start, end) ->
-            content.setSpan(
-                SearchSpan(),
-                start,
-                end,
-                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-    }
-
-    override fun renderSearchPosition(searchPosition: Int) {
-        val content = tv_text_content.text as Spannable
-
-        val spans = content.getSpans<SearchSpan>()
-        //clear last search position
-        content.getSpans<SearchFocusSpan>().forEach{ content.removeSpan(it)}
-        if (spans.isNotEmpty()){
-            //find position span
-            val result = spans[searchPosition]
-            Selection.setSelection(content, content.getSpanStart(result))
-            content.setSpan(
-                SearchFocusSpan(),
-                content.getSpanStart(result),
-                content.getSpanEnd(result),
-                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-    }
-
-    override fun clearSearchResult() {
-        val content = tv_text_content.text as Spannable
-        content.getSpans<SearchSpan>().forEach { content.removeSpan(it) }
     }
 
     override fun showSearchBar() {
@@ -192,14 +152,12 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         btn_settings.setOnClickListener{viewModel.handleToggleMenu()}
 
         btn_result_up.setOnClickListener{
-            //if (search_view.hasFocus()) search_view.clearFocus()
             if (!tv_text_content.hasFocus()) tv_text_content.requestFocus()
-            hideKeyboard(btn_result_up)
+           hideKeyboard(btn_result_up)
             viewModel.handleUpResult()
         }
 
         btn_result_down.setOnClickListener{
-            //if (search_view.hasFocus()) search_view.clearFocus()
             if (!tv_text_content.hasFocus()) tv_text_content.requestFocus()
             hideKeyboard(btn_result_down)
             viewModel.handleDownResult()
@@ -230,7 +188,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("Copied code", copy)
             clipboard.setPrimaryClip(clip)
-            viewModel.handleCopyCode()
+            //viewModel.handleCopyCode()
         }
     }
 

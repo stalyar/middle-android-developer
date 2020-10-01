@@ -123,7 +123,7 @@ class MarkdownContentView @JvmOverloads constructor(
         if (searchResult.isEmpty()) return
 
         val bounds = elements.map{it.bounds}
-        val result = searchResult.groupByBounds(bounds)
+        val result = searchResult.groupByBounds(bounds) //TODO см. видео 2:07
 
         children.forEachIndexed { index, view ->
             view as IMarkdownView
@@ -143,6 +143,11 @@ class MarkdownContentView @JvmOverloads constructor(
             val (startPos, endPos) = searchPosition
             startPos in boundRange && endPos in boundRange
         }
+
+        if (index == -1) return
+        val view = getChildAt(index)
+        view as IMarkdownView
+        view.renderSearchPosition(searchPosition, elements[index].offset)
     }
 
     fun clearSearchResult() {

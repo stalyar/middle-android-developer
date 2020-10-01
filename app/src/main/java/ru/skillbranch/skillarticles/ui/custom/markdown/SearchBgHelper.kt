@@ -82,8 +82,8 @@ class SearchBgHelper(
     }
 
     private lateinit var render: SearchBgRender
-    private val singleLineRender: SearchBgRender = SingleLineRender(padding, drawable)
-    private val multiLineRender: SearchBgRender = MultiLineRender(padding, drawableLeft, drawableMiddle, drawableRight)
+    private val singleLineRender: SearchBgRender by lazy {SingleLineRender(padding, drawable)}
+    private val multiLineRender: SearchBgRender by lazy {MultiLineRender(padding, drawableLeft, drawableMiddle, drawableRight)}
 
     private lateinit var spans: Array<out SearchSpan>
     private lateinit var headerSpans: Array<out HeaderSpan>
