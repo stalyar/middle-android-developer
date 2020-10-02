@@ -188,7 +188,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("Copied code", copy)
             clipboard.setPrimaryClip(clip)
-            //viewModel.handleCopyCode()
+            viewModel.handleCopyCode()
         }
     }
 
