@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.os.Parcel
+import android.os.Parcelable
 import android.text.Selection
 import android.text.Spannable
 import android.view.View
@@ -14,6 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
+import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.attrValue
@@ -220,4 +223,47 @@ class MarkdownCodeView private constructor(
         (background as GradientDrawable).color = ColorStateList.valueOf(bgColor)
         tv_codeView.setTextColor(textColor)
     }
+
+    override fun onSaveInstanceState(): Parcelable?{
+        val savedState = SavedState(super.onSaveInstanceState())
+        savedState.ssIsManual = isManual
+        savedState.ssIsDarkMode = isDark
+        return savedState
+    }
+    override fun onRestoreInstanceState(state : Parcelable){
+        super.onRestoreInstanceState(state)
+        if (state is SavedState){
+            isManual = state.ssIsManual
+            isDark = state.ssIsDarkMode
+            applyColors()
+        }
+    }
+
+    private class SavedState : View.BaseSavedState, Parcelable {
+        var ssIsManual: Boolean = false
+        var ssIsDarkMode: Boolean = false
+
+        constructor(superState: Parcelable?) : super(superState)
+
+        constructor(src: Parcel) : super(src){
+            //restore state from parcel
+            ssIsManual = src.readInt() == 1
+            ssIsDarkMode = src.readInt() == 1
+        }
+
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeInt(if (ssIsManual) 1 else 0)
+            out.writeInt(if (ssIsDarkMode) 1 else 0)
+        }
+
+        override fun describeContents(): Int = 0
+
+        companion object CREATOR : Parcelable.Creator<SavedState>{
+            override fun createFromParcel(source: Parcel) = SavedState(source)
+
+            override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
+        }
+    }
+
 }
