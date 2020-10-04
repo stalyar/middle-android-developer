@@ -82,6 +82,7 @@ class MarkdownContentView @JvmOverloads constructor(
 
     fun setContent(content: List<MarkdownElement>) {
         elements = content
+        var index = 0
         content.forEach{
             when (it){
                 is MarkdownElement.Text -> {
@@ -110,8 +111,8 @@ class MarkdownContentView @JvmOverloads constructor(
                         it.image.alt
                     )
                     addView(iv)
-                    //TODO layoutManager.attachToParent(iv, index)
-                    //index++
+                    layoutManager.attachToParent(iv, index)
+                    index++
                 }
                 is MarkdownElement.Scroll -> {
                     val sv = MarkdownCodeView(
@@ -120,8 +121,8 @@ class MarkdownContentView @JvmOverloads constructor(
                         it.blockCode.text
                     )
                     addView(sv)
-                    //TODO layoutManager.attachToParent(sv, index)
-                    //index++
+                    layoutManager.attachToParent(sv, index)
+                    index++
                 }
             }
         }
@@ -136,7 +137,7 @@ class MarkdownContentView @JvmOverloads constructor(
         if (searchResult.isEmpty()) return
 
         val bounds = elements.map{it.bounds}
-        val result = searchResult.groupByBounds(bounds) //TODO см. видео 2:07
+        val result = searchResult.groupByBounds(bounds)
 
         children.forEachIndexed { index, view ->
             view as IMarkdownView
@@ -183,15 +184,8 @@ class MarkdownContentView @JvmOverloads constructor(
     override fun onRestoreInstanceState(state : Parcelable){
         super.onRestoreInstanceState(state)
         if (state is SavedState) layoutManager = state.layout
-
-        //TODO temp solution
-        children.filter{it !is MarkdownTextView}
-            .forEachIndexed { index, it -> layoutManager.attachToParent(it, index) }
     }
     override fun dispatchSaveInstanceState(container : SparseArray<Parcelable?>){
-        //TODO temp solution
-        children.filter{it !is MarkdownTextView}
-            .forEachIndexed { index, it -> layoutManager.attachToParent(it, index) }
         children.filter{it !is MarkdownTextView}
             .forEach { it.saveHierarchyState(layoutManager.container) }
         dispatchFreezeSelfOnly(container)
@@ -227,13 +221,12 @@ class MarkdownContentView @JvmOverloads constructor(
 
         companion object CREATOR : Parcelable.Creator<LayoutManager>{
             override fun createFromParcel(source: Parcel): LayoutManager = LayoutManager(source)
-
             override fun newArray(size: Int): Array<LayoutManager?> = arrayOfNulls(size)
         }
 
     }
 
-    private class SavedState : View.BaseSavedState, Parcelable {
+    private class SavedState : BaseSavedState, Parcelable {
         lateinit var layout: LayoutManager
 
         constructor(superState: Parcelable?) : super(superState)

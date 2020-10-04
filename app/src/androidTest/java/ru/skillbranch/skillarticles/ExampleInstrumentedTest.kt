@@ -29,7 +29,7 @@ import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.RootActivity
 import ru.skillbranch.skillarticles.ui.custom.spans.SearchFocusSpan
 import ru.skillbranch.skillarticles.ui.custom.spans.SearchSpan
-import ru.skillbranch.skillarticles.viewmodels.ArticleState
+import ru.skillbranch.skillarticles.viewmodels.article.ArticleState
 import java.lang.Thread.sleep
 
 
@@ -113,16 +113,17 @@ class ExampleInstrumentedTest {
     @Test //failed
     fun module4() {
         val scenario = ActivityScenario.launch(RootActivity::class.java)
-        var expectedData = ArticleState(
-            isShowMenu = true,
-            isBigText = true,
-            isLoadingContent = false,
-            content = "test content",
-            isLike = true,
-            isBookmark = true,
-            title = "test title",
-            category = "test category"
-        )
+        var expectedData =
+            ArticleState(
+                isShowMenu = true,
+                isBigText = true,
+                isLoadingContent = false,
+                content = "test content",
+                isLike = true,
+                isBookmark = true,
+                title = "test title",
+                category = "test category"
+            )
 
         scenario.onActivity { activity ->
             activity.binding.bind(expectedData)
@@ -206,7 +207,8 @@ class ExampleInstrumentedTest {
         val searchResult = listOf(322 to 325, 930 to 933, 1032 to 1035, 1060 to 1063)
 
         scenario.onActivity { activity ->
-            activity.binding.bind(ArticleState().copy(content = content))
+            activity.binding.bind(
+                ArticleState().copy(content = content))
             activity.showSearchBar()
         }
         sleep(500)
