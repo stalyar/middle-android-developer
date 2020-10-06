@@ -54,7 +54,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
             .addMenuItem(
                 MenuItemHolder(
                     "search",
-                    R.id.acrion_search,
+                    R.id.action_search,
                     R.drawable.ic_search_black_24dp,
                     R.layout.search_view_layout
                 )
@@ -115,8 +115,13 @@ class ArticleFragment : BaseFragment<ArticleViewModel>(), IArticleView {
         super.onDestroyView()
     }
 
-    override fun showSearchBar(){
+    override fun showSearchBar() {
         bottombar.setSearchState(true)
+        scroll.setMarginOptionally(bottom = root.dpToIntPx(56))
+    }
+
+    override fun hideSearchBar(){
+        bottombar.setSearchState(false)
         scroll.setMarginOptionally(bottom = 0)
     }
 
