@@ -22,14 +22,15 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>(){
 
     private val articlesAdapter = ArticlesAdapter { item ->
         Log.e("ArticlesFragment", "click on article: ${item.id}");
-        val action = ArticlesFragmentDirections.actionNavArticlesToPafeArticle(
+        val action = ArticlesFragmentDirections.actionNavArticlesToPageArticle(
             item.id,
             item.author,
             item.authorAvatar,
             item.category,
-            item.date,
+            item.categoryIcon,
             item.poster,
-            item.title
+            item.title,
+            item.date
         )
 
         viewModel.navigate(NavigationCommand.To(action.actionId, action.arguments))

@@ -10,11 +10,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_article.*
+import kotlinx.android.synthetic.main.item_article.view.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.ArticleItemData
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.format
+
 
 class ArticlesAdapter(private val listener: (ArticleItemData)-> Unit) :
     ListAdapter<ArticleItemData, ArticleVH>(ArticleDiffCallback()) {
@@ -47,21 +48,21 @@ class ArticleVH(override val containerView: View) : RecyclerView.ViewHolder(cont
             .load(item.poster)
             .transform(CenterCrop(), RoundedCorners(cornerRadius))
             .override(posterSize)
-            .into(iv_poster)
+            .into(containerView.iv_poster)
 
         Glide.with(containerView.context)
             .load(item.categoryIcon)
             .transform(CenterCrop(), RoundedCorners(cornerRadius))
             .override(categorySize)
-            .into(iv_category)
+            .into(containerView.iv_category)
 
-        tv_date.text = item.date.format()
-        tv_author.text = item.author
-        tv_title.text = item.title
-        tv_description.text = item.description
-        tv_like_count.text = "${item.likeCount}"
-        tv_comments_count.text = "${item.commentCount}"
-        tv_read_duration.text = "${item.readDuration} min read"
+        containerView.tv_date.text = item.date.format()
+        containerView.tv_author.text = item.author
+        containerView.tv_title.text = item.title
+        containerView.tv_description.text = item.description
+        containerView.tv_likes_count.text = "${item.likeCount}"
+        containerView.tv_comments_count.text = "${item.commentCount}"
+        containerView. tv_read_duration.text = "${item.readDuration} min read"
 
         itemView.setOnClickListener{listener(item)}
     }

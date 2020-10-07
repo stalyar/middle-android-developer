@@ -6,7 +6,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
-import kotlinx.android.synthetic.main.layout_bottombar.*
+import kotlinx.android.synthetic.main.layout_bottombar.bottombar
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.selectDestination
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
@@ -79,8 +79,7 @@ class RootActivity : BaseActivity<RootViewModel>(){
     }
 
     override fun subscribeOnState(state: IViewModelState) {
-        TODO("Not yet implemented")
+        //TODO
     }
 
 }
-stopped at 1:
