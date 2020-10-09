@@ -8,7 +8,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.bottombar
 import ru.skillbranch.skillarticles.R
-import ru.skillbranch.skillarticles.data.repositories.RootRepository
 import ru.skillbranch.skillarticles.extensions.selectDestination
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
 import ru.skillbranch.skillarticles.viewmodels.RootViewModel
@@ -44,13 +43,13 @@ class RootActivity : BaseActivity<RootViewModel>(){
             //if destination change set select bottom navigation item
             nav_view.selectDestination(destination)
 
-            if (destination.id == R.id.nav_auth) nav_view.selectedItemId = arguments?.get("private_destination") as Int
+            /*if (destination.id == R.id.nav_auth) nav_view.selectedItemId = arguments?.get("private_destination") as Int
 
             if (destination.id == R.id.nav_auth && RootRepository.isAuth().value!!){
                 controller.popBackStack()
                 val private = arguments?.get("private_destination") as Int
                 if (private != null) controller.navigate(private)
-            }
+            }*/
         }
     }
 
