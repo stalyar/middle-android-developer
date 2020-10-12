@@ -8,13 +8,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.skillbranch.skillarticles.data.models.ArticleItemData
-import ru.skillbranch.skillarticles.data.repositories.ArticlesStrategy
-import ru.skillbranch.skillarticles.data.repositories.ArticlesDatafactory
+import ru.skillbranch.skillarticles.data.repositories.ArticleStrategy
+import ru.skillbranch.skillarticles.data.repositories.ArticlesDataFactory
 import ru.skillbranch.skillarticles.data.repositories.ArticlesRepository
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 class ArticlesViewModel(handle: SavedStateHandle) :
@@ -56,7 +55,7 @@ class ArticlesViewModel(handle: SavedStateHandle) :
         )
 
         //if all articles
-        if (dataFactory.strategy is ArticlesStrategy.AllArticles){
+        if (dataFactory.strategy is ArticleStrategy.AllArticles){
             builder.setBoundaryCallback(
                 ArticlesBoundaryCallback(
                     ::zeroLoadingHandle,
@@ -99,7 +98,7 @@ class ArticlesViewModel(handle: SavedStateHandle) :
         notify(Notify.TextMessage("Storage is empty"))
         viewModelScope.launch(Dispatchers.IO){
             val items =
-                repository.loadArticlesFromNetWork(
+                repository.loadArticlesFromNetwork(
                     start = 0,
                     size = listConfig.initialLoadSizeHint
                 )

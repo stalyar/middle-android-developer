@@ -2,7 +2,6 @@ package ru.skillbranch.skillarticles.extensions
 
 import android.app.Activity
 import android.content.Context
-import android.inputmethodservice.InputMethodService
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -29,6 +28,11 @@ fun Context.dpToIntPx(dp: Int): Int {
 
 fun Context.attrValue(attr:Int) : Int{
     return attr;
+}
+
+fun Context.showKeyboard(view: View){
+    val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
 }
 
 fun Context.hideKeyboard(view: View){

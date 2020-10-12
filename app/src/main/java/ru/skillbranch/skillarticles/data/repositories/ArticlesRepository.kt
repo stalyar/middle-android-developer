@@ -30,12 +30,12 @@ object ArticlesRepository {
         .take(size)
         .toList()
 
-    private fun loadArticlesFromNetwork(start: Int, size: Int) : List<ArticleItemData> = network.networkArticleItems
+    fun loadArticlesFromNetwork(start: Int, size: Int) : List<ArticleItemData> = network.networkArticleItems
         .drop(start)
         .take(size)
         .apply { sleep(500) }
 
-    private fun insertArticlesToDb(articles: List<ArticleItemData>) {
+    fun insertArticlesToDb(articles: List<ArticleItemData>) {
         local.localArticleItems.addAll(articles)
             .apply { sleep(100) }
     }

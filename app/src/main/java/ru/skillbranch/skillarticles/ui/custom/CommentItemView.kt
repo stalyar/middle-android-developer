@@ -1,5 +1,22 @@
 package ru.skillbranch.skillarticles.ui.custom
 
+import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import ru.skillbranch.skillarticles.R
+import ru.skillbranch.skillarticles.data.models.CommentItemData
+import ru.skillbranch.skillarticles.extensions.*
+import java.lang.Math.min
+
 
 class CommentItemView(context: Context) : ViewGroup(context, null, 0) {
     private val defaultVSpace = context.dpToIntPx(8)

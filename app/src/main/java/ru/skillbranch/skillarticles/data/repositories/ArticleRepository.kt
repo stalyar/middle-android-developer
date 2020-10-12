@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import ru.skillbranch.skillarticles.data.LocalDataHolder
-import ru.skillbranch.skillarticles.data.NetworkDataHolder
 import androidx.paging.DataSource
 import androidx.paging.ItemKeyedDataSource
+import ru.skillbranch.skillarticles.data.LocalDataHolder
+import ru.skillbranch.skillarticles.data.NetworkDataHolder
 import ru.skillbranch.skillarticles.data.models.*
 import java.lang.Math.abs
 import java.lang.Thread.sleep
@@ -63,7 +63,7 @@ object ArticleRepository {
                 .take(size)
 
             size < 0 -> data
-                .dropWhile { it.slug != slug }
+                .dropLastWhile { it.slug != slug }
                 .dropLast(1)
                 .takeLast(abs(size))
 
@@ -81,7 +81,7 @@ object ArticleRepository {
 }
 
 class CommentsDataFactory(
-    private val itemProvider: (String?, Int, String?) -> List<CommentItemData>,
+    private val itemProvider: (String?, Int, String) -> List<CommentItemData>,
     private val articleId: String,
     private val totalCount: Int
 ): DataSource.Factory<String?, CommentItemData>(){
