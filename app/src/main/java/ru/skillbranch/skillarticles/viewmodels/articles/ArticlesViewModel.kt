@@ -119,8 +119,9 @@ class ArticlesViewModel(handle: SavedStateHandle) :
         updateState { it.copy(isSearch = isSearch) }
     }
 
-    fun handleToggleBookmark(id: String, isChecked: Boolean){
+    fun handleToggleBookmark(id: String, isChecked: Boolean) {
         repository.updateBookmark(id, isChecked)
+        listData.value?.dataSource?.invalidate()
     }
 
 }

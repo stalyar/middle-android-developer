@@ -22,7 +22,7 @@ object ArticlesRepository {
     fun bookmarkArticles(): ArticlesDataFactory =
         ArticlesDataFactory(ArticleStrategy.BookmarkArticles(::findBookmarkArticles))
 
-    fun searchBookmark(searchQuery: String) =
+    fun searchBookmarkArticles(searchQuery: String) =
         ArticlesDataFactory(ArticleStrategy.SearchArticles(::findSearchBookmark, searchQuery))
 
     private fun findArticlesByRange(start: Int, size: Int) = local.localArticleItems
@@ -61,10 +61,10 @@ object ArticlesRepository {
             .apply { sleep(100) }
     }
 
-    fun updateBookmark(id: String, isChecked: Boolean){
-        val info = local.findArticlePersonalInfo(id).value!!
-        info.copy(isBookmark =  isChecked)
-        local.updateArticlePersonalInfo(info)
+    fun updateBookmark(id: String, isChecked: Boolean) {
+        val index = local.localArticleItems.indexOfFirst { it.id == id }
+        if (index == -1) return
+        local.localArticleItems[index] = local.localArticleItems[index].copy(isBookmark = isChecked)
     }
 }
 

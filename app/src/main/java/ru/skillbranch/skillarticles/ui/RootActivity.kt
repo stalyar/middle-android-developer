@@ -44,7 +44,7 @@ class RootActivity : BaseActivity<RootViewModel>(){
             //if destination change set select bottom navigation item
             nav_view.selectDestination(destination)
 
-            if (destination.id == R.id.nav_auth) nav_view.selectedItemId = arguments?.get("private_destination") as Int
+            //if (destination.id == R.id.nav_auth) nav_view.selectedItemId = arguments?.get("private_destination") as Int
 
             if (destination.id == R.id.nav_auth && RootRepository.isAuth().value!!){
                 controller.popBackStack()
