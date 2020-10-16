@@ -1,5 +1,6 @@
 package ru.skillbranch.skillarticles.ui.articles
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
@@ -37,7 +38,7 @@ class ArticleVH(val containerView: View) : RecyclerView.ViewHolder(containerView
     ){
 
         //if use placeholder item may be null
-        (containerView as ArticleItemView).bind(item!!, null)
+        (containerView as ArticleItemView).bind(item!!) { _, _ -> Log.e("T", "click") }
         itemView.setOnClickListener{listener(item!!)}
     }
 }
