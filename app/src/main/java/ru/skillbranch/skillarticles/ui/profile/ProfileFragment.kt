@@ -1,34 +1,17 @@
 package ru.skillbranch.skillarticles.ui.profile
 
-import androidx.lifecycle.ViewModelProviders
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-
+import androidx.fragment.app.viewModels
 import ru.skillbranch.skillarticles.R
+import ru.skillbranch.skillarticles.ui.base.BaseFragment
 import ru.skillbranch.skillarticles.viewmodels.profile.ProfileViewModel
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : BaseFragment<ProfileViewModel>() {
 
-    companion object {
-        fun newInstance() = ProfileFragment()
-    }
+    override val viewModel: ProfileViewModel by viewModels()
+    override val layout: Int = R.layout.fragment_profile
 
-    private lateinit var viewModel: ProfileViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun setupViews() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }
