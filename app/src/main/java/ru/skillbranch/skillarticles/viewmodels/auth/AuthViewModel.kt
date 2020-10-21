@@ -6,7 +6,7 @@ import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
 
-class AuthViewModel(handle: SavedStateHandle) : BaseViewModel<AuthState>(handle, AuthState()), IAuthViewModel {
+class AuthViewModel(handle: SavedStateHandle) : BaseViewModel<AuthState>(handle, AuthState()), IAuthViewModel{
     private val repository = RootRepository
     init {
         subscribeOnDataSource(repository.isAuth()){isAuth, state ->
@@ -14,9 +14,11 @@ class AuthViewModel(handle: SavedStateHandle) : BaseViewModel<AuthState>(handle,
         }
     }
 
-    override fun handleLogin(login: String, pass: String, dest: Int?) {
-        repository.setAuth(true)
-        navigate(NavigationCommand.FinishLogin(dest))
+    override fun handleLogin(login:String, pass:String, dest:Int?) {
+        launchSafety {
+            repository.login(login, pass)
+            navigate(NavigationCommand.FinishLogin(dest))
+        }
     }
 }
 

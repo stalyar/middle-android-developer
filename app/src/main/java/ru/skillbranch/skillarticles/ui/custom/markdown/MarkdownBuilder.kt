@@ -2,7 +2,6 @@ package ru.skillbranch.skillarticles.ui.custom.markdown
 
 import android.content.Context
 import android.graphics.Typeface
-import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.SpannedString
 import android.text.style.StrikethroughSpan
@@ -13,7 +12,6 @@ import androidx.core.text.inSpans
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.data.repositories.Element
 import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
-import ru.skillbranch.skillarticles.data.repositories.MarkdownParser
 import ru.skillbranch.skillarticles.extensions.attrValue
 import ru.skillbranch.skillarticles.extensions.dpToPx
 import ru.skillbranch.skillarticles.ui.custom.spans.*
@@ -44,7 +42,7 @@ class MarkdownBuilder(context: Context) {
         }
     }
 
-    private fun buildElement(element: Element, builder: SpannableStringBuilder): CharSequence {
+    fun buildElement(element: Element, builder: SpannableStringBuilder): CharSequence {
         return builder.apply{
             when (element){
                 is Element.Text -> append(element.text)
