@@ -9,8 +9,11 @@ import ru.skillbranch.skillarticles.data.local.entities.ArticleContent
 @Dao
 interface ArticleContentsDao {
     @Query("SELECT * FROM article_contents")
-    suspend fun findArticleContentsTest() : List<ArticleContent>
+    suspend fun findArticlesContentsTest() : List<ArticleContent>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(obj:ArticleContent): Long
+    suspend fun insert(obj: ArticleContent): Long
+
+    @Query("DELETE FROM article_contents WHERE article_id = :articleId")
+    fun delete(articleId: String)
 }

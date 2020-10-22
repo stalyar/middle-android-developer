@@ -22,8 +22,10 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
 
+        //start network monitoring
         NetworkMonitor.registerNetworkMonitor(applicationContext)
 
+        //set saved night/day mode
         val mode = if (PrefManager.isDarkMode == true) AppCompatDelegate.MODE_NIGHT_YES
         else AppCompatDelegate.MODE_NIGHT_NO
 

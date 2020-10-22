@@ -4,9 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.skillbranch.skillarticles.data.remote.res.CommentRes
 import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
 import ru.skillbranch.skillarticles.data.repositories.CommentsDataFactory
@@ -112,11 +110,9 @@ class ArticleViewModel(
 
         val msg = if (!currentState.isBookmark) "Add to bookmarks" else "Remove from bookmarks"
 
-        viewModelScope.launch(Dispatchers.IO) {
+        launchSafety(null, {notify(Notify.TextMessage(msg))}){
             repository.toggleBookmark(articleId)
-            withContext(Dispatchers.Main) {
-                notify(Notify.TextMessage(msg))
-            }
+            //TODO
         }
     }
 
@@ -130,12 +126,10 @@ class ArticleViewModel(
             ) { handleLike() } // handler function , if press "No, still like it" on snackbar, then toggle again
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        launchSafety (null, {notify(msg)}){
             repository.toggleLike(articleId)
-            if (isLiked) repository.decrementLike(articleId) else repository.incrementLike(articleId)
-            withContext(Dispatchers.Main) {
-                notify(msg)
-            }
+            if (isLiked) repository.decrementLike(articleId)
+            else repository.incrementLike(articleId)
         }
     }
 

@@ -11,14 +11,11 @@ object RootRepository {
     private val network = NetworkManager.api
 
     fun isAuth() : LiveData<Boolean> = preferences.isAuthLive
-    fun setAuth(auth: Boolean) {
-        preferences.isAuth = auth
-    }
 
     suspend fun login(login: String, pass: String) {
         val auth = network.login(LoginReq(login, pass))
         preferences.profile = auth.user
-        preferences.accessToken = "Bearer ${auth.accessToken}"
-        preferences.refreshToken = auth.refreshToken
+        preferences.accessToken = "Bearer ${auth.accessToken}"  //aсcess Token нужен чтобы подписывать запросы после авторизации, имеет ограниченный срок жизни (1 день или типо того)
+        preferences.refreshToken = auth.refreshToken   //refreshToken нужен чтобы обновить aсcess Token без повторной авторизации при помощи interceptor
     }
 }

@@ -36,6 +36,7 @@ object PrefManager {
 
     val profileLive: LiveData<User?> by PrefLiveObjDelegate(
         "profile",
+        //UserJsonAdapter(moshi),//сгенерированный адаптер из класса User с помощью @JsonClass
         moshi.adapter(User::class.java),
         preferences
     )

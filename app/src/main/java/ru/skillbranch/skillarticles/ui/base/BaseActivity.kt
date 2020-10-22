@@ -95,10 +95,12 @@ abstract class BaseActivity<T : BaseViewModel<out IViewModelState>> : AppCompatA
             Loading.SHOW_LOADING -> progress.isVisible = true
             Loading.SHOW_BLOCKING_LOADING -> {
                 progress.isVisible = true
+                //блокировка UI при отображении загрузки
                 window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
             Loading.HIDE_LOADING -> {
                 progress.isVisible = false
+                //разблокировка UI после загрузки
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
         }

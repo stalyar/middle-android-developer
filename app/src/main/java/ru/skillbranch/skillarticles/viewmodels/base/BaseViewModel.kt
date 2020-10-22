@@ -62,10 +62,16 @@ abstract class BaseViewModel<T : IViewModelState>(
         notifications.value = Event(content)
     }
 
+    /***
+     * отображение индикатора загрузки (по умолчанию не блокирующий Loading)
+     */
     protected fun showLoading(loadingType: Loading = Loading.SHOW_LOADING) {
         loading.value = loadingType
     }
 
+    /***
+     * скрытие индикатора загрузки
+     */
     protected fun hideLoading() {
         loading.value = Loading.HIDE_LOADING
     }
@@ -76,7 +82,7 @@ abstract class BaseViewModel<T : IViewModelState>(
 
     /***
      * более компактная форма записи observe() метода LiveData принимает последним аргумент лямбда
-     * выражение обрабатывающее изменение текущего стостояния
+     * выражение обрабатывающее изменение текущего состояния
      */
     fun observeState(owner: LifecycleOwner, onChanged: (newState: T) -> Unit) {
         state.observe(owner, Observer { onChanged(it!!) })
@@ -134,7 +140,11 @@ abstract class BaseViewModel<T : IViewModelState>(
         val errHand = CoroutineExceptionHandler { _, err ->
             errHandler?.invoke(err) ?: when(err) {
                 is NoNetworkError -> notify(Notify.TextMessage("Network is not available, check internet connection"))
-                is SocketTimeoutException -> notify(Notify.ActionMessage("Network timeout exception - please try again", "Retry") {
+                is SocketTimeoutException -> notify(
+                    Notify.ActionMessage(
+                        "Network timeout exception - please try again",
+                        "Retry"
+                    ) {
                     launchSafety(errHandler, compHandler, block)
                 })
                 is ApiError.InternalServerError -> notify(Notify.ErrorMessage(err.message,"Retry") {
@@ -146,10 +156,14 @@ abstract class BaseViewModel<T : IViewModelState>(
         }
 
         (viewModelScope + errHand).launch {
+            //отобразить индикатор загрузки
             showLoading()
+            //начать выполнять suspend функцию
             block()
         }.invokeOnCompletion {
+            //скрыть индикатор загрузки
             hideLoading()
+            //вызвать обработчик окончпния выполнения suspend функции если имеется
             compHandler?.invoke(it!!)
         }
     }

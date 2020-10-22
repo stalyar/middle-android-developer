@@ -69,10 +69,18 @@ interface ArticleCountsDao : BaseDao<ArticleCounts> {
 
     @Query(
         """
-            UPDATE article_counts SET comments = :commentsCount, updated_at = CURRENT_TIMESTAMP
+            UPDATE article_counts SET comments = :commentsCount
             WHERE article_id = :articleId
         """
     )
     suspend fun updateCommentsCount(articleId: String, commentsCount: Int)
+
+    @Query(
+        """
+            UPDATE article_counts SET likes = :likes
+            WHERE article_id = :articleId
+        """
+    )
+    suspend fun updateLike(articleId: String, likes: Int)
 
 }

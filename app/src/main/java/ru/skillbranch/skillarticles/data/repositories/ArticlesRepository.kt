@@ -26,6 +26,7 @@ interface IArticlesRepository {
     suspend fun incrementTagUseCount(tag: String)
     suspend fun findLastArticleId(): String?
     suspend fun fetchArticleContent(articleId: String)
+    suspend fun removeArticleContent(articleId: String)
 }
 
 object ArticlesRepository: IArticlesRepository {
@@ -44,21 +45,16 @@ object ArticlesRepository: IArticlesRepository {
         articleCountsDao: ArticleCountsDao,
         categoriesDao: CategoriesDao,
         tagsDao: TagsDao,
-        articlePersonalDao: ArticlePersonalInfosDao
+        articlePersonalDao: ArticlePersonalInfosDao,
+        articlesContentDao: ArticleContentsDao
     ) {
         this.articlesDao = articlesDao
         this.articleCountsDao = articleCountsDao
         this.categoriesDao = categoriesDao
         this.tagsDao = tagsDao
         this.articlePersonalDao = articlePersonalDao
+        this.articlesContentDao = articlesContentDao
     }
-
-    override suspend fun loadArticlesFromNetwork(start: String?, size: Int): Int {
-        val items = network.articles(start, size)
-        if (items.isNotEmpty()) insertArticlesToDb(items)
-        return items.size
-    }
-
 
     private suspend fun insertArticlesToDb(articles: List<ArticleRes>) {
         articlesDao.upsert(articles.map { it.data.toArticle() })
@@ -99,11 +95,21 @@ object ArticlesRepository: IArticlesRepository {
         tagsDao.incrementTagUseCount(tag)
     }
 
+    override suspend fun loadArticlesFromNetwork(start: String?, size: Int) : Int{
+        val items = network.articles(start, size)
+        if (items.isNotEmpty()) insertArticlesToDb(items)
+        return items.size
+    }
+
     override suspend fun findLastArticleId(): String? = articlesDao.findLastArticleId()
 
     override suspend fun fetchArticleContent(articleId: String) {
         val content = network.loadArticleContent(articleId)
         articlesContentDao.insert(content.toArticleContent())
+    }
+
+    override suspend fun removeArticleContent(articleId: String) {
+        articlesContentDao.delete(articleId)
     }
 }
 

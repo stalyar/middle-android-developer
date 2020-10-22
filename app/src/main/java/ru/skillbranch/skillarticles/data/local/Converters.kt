@@ -25,6 +25,5 @@ class ListConverter {
         content?.joinToString { "," }
 
     @TypeConverter
-    fun toList(content: String?): List<String>? =
-        content?.let { it.split(",") }
+    fun toList(str: String?): List<String> = str?.split(",") ?: emptyList()
 }

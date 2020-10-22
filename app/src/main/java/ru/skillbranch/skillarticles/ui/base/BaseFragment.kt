@@ -89,6 +89,7 @@ abstract class BaseFragment<T : BaseViewModel<out IViewModelState>> : Fragment()
         super.onPrepareOptionsMenu(menu)
     }
 
+    //open for override in fragment if needed
     open fun renderLoading(loadingState: Loading) {
         root.renderLoading(loadingState)
     }

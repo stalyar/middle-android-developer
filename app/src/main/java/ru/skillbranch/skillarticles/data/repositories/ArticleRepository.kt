@@ -14,6 +14,7 @@ import ru.skillbranch.skillarticles.data.local.entities.ArticleFull
 import ru.skillbranch.skillarticles.data.models.AppSettings
 import ru.skillbranch.skillarticles.data.remote.NetworkManager
 import ru.skillbranch.skillarticles.data.remote.RestService
+import ru.skillbranch.skillarticles.data.remote.err.NoNetworkError
 import ru.skillbranch.skillarticles.data.remote.req.MessageReq
 import ru.skillbranch.skillarticles.data.remote.res.CommentRes
 import ru.skillbranch.skillarticles.extensions.data.toArticleContent
@@ -31,6 +32,8 @@ interface IArticleRepository {
     fun updateSettings(copy: AppSettings)
     suspend fun fetchArticleContent(articleId: String)
     fun findArticleCommentCount(articleId: String): LiveData<Int>
+    suspend fun addBookmark(articleId: String)
+    suspend fun removeBookmark(articleId: String)
 }
 
 object ArticleRepository : IArticleRepository {
@@ -69,6 +72,36 @@ object ArticleRepository : IArticleRepository {
         articlePersonalDao.toggleBookmarkOrInsert(articleId)
     }
 
+    override suspend fun addBookmark(articleId: String) {
+        //если не авторизован
+        if  (preferences.accessToken!!.isEmpty()){
+            return
+        }
+
+        try {
+            val res = network.addBookmark(articleId, preferences.accessToken)
+        }
+        catch (e:Throwable){
+            if (e is NoNetworkError) return
+            throw e
+        }
+    }
+
+    override suspend fun removeBookmark(articleId: String) {
+        //если не авторизован
+        if  (preferences.accessToken!!.isEmpty()){
+            return
+        }
+
+        try {
+            val res = network.removeBookmark(articleId, preferences.accessToken)
+        }
+        catch (e:Throwable){
+            if (e is NoNetworkError) return
+            throw e
+        }
+    }
+
     override fun updateSettings(appSettings: AppSettings) {
         preferences.updateSettings(appSettings)
     }
@@ -96,11 +129,37 @@ object ArticleRepository : IArticleRepository {
 
 
     override suspend fun decrementLike(articleId: String) {
-        articleCountsDao.decrementLike(articleId)
+
+        if  (preferences.accessToken!!.isEmpty()){
+            articleCountsDao.decrementLike(articleId)
+            return
+        }
+
+        try {
+            val res = network.decrementLike(articleId, preferences.accessToken)
+            articleCountsDao.updateLike(articleId, res.likeCount)
+        }
+        catch (e:Throwable){
+            articleCountsDao.decrementLike(articleId)
+            throw e
+        }
     }
 
     override suspend fun incrementLike(articleId: String) {
+
+        if  (preferences.accessToken!!.isEmpty()){
+            articleCountsDao.incrementLike(articleId)
+            return
+        }
+
+        try {
+        val res = network.incrementLike(articleId, preferences.accessToken)
+        articleCountsDao.updateLike(articleId, res.likeCount)
+    }
+    catch (e:Throwable){
         articleCountsDao.incrementLike(articleId)
+        throw e
+    }
     }
 
     override suspend fun sendMessage(articleId: String, message: String, answerToMessageId: String?) {
@@ -109,7 +168,7 @@ object ArticleRepository : IArticleRepository {
             MessageReq(message, answerToMessageId),
             preferences.accessToken
         )
-        articleCountsDao.incrementCommentsCount(articleId)
+        articleCountsDao.updateCommentsCount(articleId, messageCount)
     }
 
     suspend fun refreshCommentsCount(articleId: String) {
@@ -128,12 +187,16 @@ class CommentsDataFactory(
 ) : DataSource.Factory<String?, CommentRes>() {
     override fun create(): DataSource<String?, CommentRes> =
         CommentsDataSource(itemProvider, articleId, totalCount, errHandler)
+
+}
+
     class CommentsDataSource(
         private val itemProvider: RestService,
         private val articleId: String,
         private val totalCount: Int,
         private val errHandler: (Throwable) -> Unit
     ) : ItemKeyedDataSource<String, CommentRes>() {
+
         override fun loadInitial(
             params: LoadInitialParams<String>,
             callback: LoadInitialCallback<CommentRes>
@@ -174,8 +237,8 @@ class CommentsDataFactory(
             }
         }
 
-        override fun getKey(item: CommentRes): String = item.slug
+        override fun getKey(item: CommentRes): String = item.id
 
     }
 
-}
+

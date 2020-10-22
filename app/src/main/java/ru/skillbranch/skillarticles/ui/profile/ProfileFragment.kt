@@ -20,8 +20,8 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
 
     }
 
-    private fun updateAvatar(it: String) {
-
+    private fun updateAvatar(avatarUrl: String) {
+        //TODO update avatar with Glide
     }
 
     inner class ProfileBinding: Binding() {
