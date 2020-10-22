@@ -2,7 +2,6 @@ package ru.skillbranch.skillarticles.data
 
 import ru.skillbranch.skillarticles.data.EntityGenerator.generateArticleRes
 import ru.skillbranch.skillarticles.data.EntityGenerator.generateComments
-import ru.skillbranch.skillarticles.data.models.CommentItemData
 import ru.skillbranch.skillarticles.data.models.User
 import ru.skillbranch.skillarticles.data.remote.res.ArticleContentRes
 import ru.skillbranch.skillarticles.data.remote.res.ArticleRes

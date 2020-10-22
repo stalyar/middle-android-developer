@@ -27,6 +27,13 @@ interface ArticlesDao : BaseDao<Article> {
             SELECT * FROM articles
         """
     )
+    suspend fun findArticlesTest(): List<Article>
+
+    @Query(
+        """
+            SELECT * FROM articles
+        """
+    )
     fun findArticles(): LiveData<List<Article>>
 
     @Query(

@@ -2,7 +2,6 @@ package ru.skillbranch.skillarticles.data
 
 import ru.skillbranch.skillarticles.data.local.entities.Author
 import ru.skillbranch.skillarticles.data.local.entities.Category
-import ru.skillbranch.skillarticles.data.models.CommentItemData
 import ru.skillbranch.skillarticles.data.models.User
 import ru.skillbranch.skillarticles.data.remote.res.ArticleCountsRes
 import ru.skillbranch.skillarticles.data.remote.res.ArticleDataRes

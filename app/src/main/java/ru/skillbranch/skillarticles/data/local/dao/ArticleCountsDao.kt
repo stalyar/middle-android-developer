@@ -17,6 +17,9 @@ interface ArticleCountsDao : BaseDao<ArticleCounts> {
             .also { if (it.isNotEmpty()) update(it) }
     }
 
+    @Query("SELECT * FROM article_counts WHERE article_id = :articleId")
+    suspend fun findArticlesCountsTest(articleId: String) : ArticleCounts
+
     @Query(
         """
             SELECT * FROM article_counts
