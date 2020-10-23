@@ -8,7 +8,7 @@ import okhttp3.Route
 import ru.skillbranch.skillarticles.data.local.PrefManager
 import ru.skillbranch.skillarticles.data.remote.NetworkManager
 import ru.skillbranch.skillarticles.data.remote.req.RefreshReq
-
+//не используется
 class TokenAuthenticator : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         if (response.code == 401) {
