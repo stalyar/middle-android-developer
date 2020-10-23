@@ -8,6 +8,7 @@ import ru.skillbranch.skillarticles.AppConfig
 import ru.skillbranch.skillarticles.data.JsonConverter.moshi
 import ru.skillbranch.skillarticles.data.remote.interceptors.ErrorStatusInterceptor
 import ru.skillbranch.skillarticles.data.remote.interceptors.NetworkStatusInterceptor
+import ru.skillbranch.skillarticles.data.remote.interceptors.TokenAuthenticator
 import java.util.concurrent.TimeUnit
 
 object NetworkManager {
@@ -20,6 +21,7 @@ object NetworkManager {
         val client = OkHttpClient().newBuilder()
             .readTimeout(2, TimeUnit.SECONDS) //socket timeout (GET) default 10s
             .writeTimeout(5, TimeUnit.SECONDS) //socket timeout (POST, PUT, DELETE)
+            .authenticator(TokenAuthenticator()) //refresh token if response status code is 401
             .addInterceptor(NetworkStatusInterceptor()) //кастомный перехватчик статуса сети, выбрасывает кастомные ошибки при отсутствии сети
             .addInterceptor(logging)
             .addInterceptor(ErrorStatusInterceptor()) //кастомный перехватчик ошибок сервера
