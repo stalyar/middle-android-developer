@@ -22,7 +22,7 @@ import ru.skillbranch.skillarticles.extensions.data.toArticleContent
 interface IArticleRepository {
     fun findArticle(articleId: String): LiveData<ArticleFull>
     fun getAppSettings(): LiveData<AppSettings>
-    suspend fun toggleLike(articleId: String)
+    suspend fun toggleLike(articleId: String) : Boolean
     suspend fun toggleBookmark(articleId: String)
     fun isAuth(): LiveData<Boolean>
     suspend fun sendMessage(articleId: String, text: String, answerToSlug: String?)
@@ -64,8 +64,8 @@ object ArticleRepository : IArticleRepository {
     override fun getAppSettings(): LiveData<AppSettings> =
         preferences.appSettings
 
-    override suspend fun toggleLike(articleId: String) {
-        articlePersonalDao.toggleLikeOrInsert(articleId)
+    override suspend fun toggleLike(articleId: String): Boolean {
+        return articlePersonalDao.toggleLikeOrInsert(articleId)
     }
 
     override suspend fun toggleBookmark(articleId: String) {
@@ -129,8 +129,8 @@ object ArticleRepository : IArticleRepository {
 
 
     override suspend fun decrementLike(articleId: String) {
-
-        if  (preferences.accessToken!!.isEmpty()){
+        //check auth locally
+        if (preferences.accessToken!!.isEmpty()) {
             articleCountsDao.decrementLike(articleId)
             return
         }
@@ -138,28 +138,31 @@ object ArticleRepository : IArticleRepository {
         try {
             val res = network.decrementLike(articleId, preferences.accessToken)
             articleCountsDao.updateLike(articleId, res.likeCount)
-        }
-        catch (e:Throwable){
-            articleCountsDao.decrementLike(articleId)
+        } catch (e: Throwable) {
+            if (e is NoNetworkError) {
+                articleCountsDao.decrementLike(articleId)
+                return
+            }
             throw e
         }
     }
 
     override suspend fun incrementLike(articleId: String) {
-
-        if  (preferences.accessToken!!.isEmpty()){
+        if (preferences.accessToken!!.isEmpty()) {
             articleCountsDao.incrementLike(articleId)
             return
         }
 
         try {
-        val res = network.incrementLike(articleId, preferences.accessToken)
-        articleCountsDao.updateLike(articleId, res.likeCount)
-    }
-    catch (e:Throwable){
-        articleCountsDao.incrementLike(articleId)
-        throw e
-    }
+            val res = network.incrementLike(articleId, preferences.accessToken)
+            articleCountsDao.updateLike(articleId, res.likeCount)
+        } catch (e: Throwable) {
+            if (e is NoNetworkError) {
+                articleCountsDao.incrementLike(articleId)
+                return
+            }
+            throw e
+        }
     }
 
     override suspend fun sendMessage(articleId: String, message: String, answerToMessageId: String?) {
