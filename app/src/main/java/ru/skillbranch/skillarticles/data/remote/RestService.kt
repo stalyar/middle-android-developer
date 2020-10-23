@@ -62,7 +62,4 @@ interface RestService {
         @Path("article") articleId: String,
         @Header("Authorization") token: String?
     ): BookmarkRes
-
-    @POST("auth/refresh")
-    fun refreshAccessToken(@Body refresh: RefreshReq): Call<RefreshRes>
 }
