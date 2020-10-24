@@ -63,4 +63,8 @@ object PrefManager {
             putBoolean("isBigText", settings.isBigText)
         }
     }
+
+    fun replaceAvatarUrl(url: String) {
+        profile = profile!!.copy(avatar = url)
+    }
 }
