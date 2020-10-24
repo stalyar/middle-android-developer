@@ -5,16 +5,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.skillbranch.skillarticles.R
 
-/**
- * A simple [Fragment] subclass.
- */
 class ChoseCategoryDialog : DialogFragment() {
     companion object {
         const val CHOOSE_CATEGORY_KEY = "CHOOSE_CATEGORY_KEY"

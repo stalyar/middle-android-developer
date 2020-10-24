@@ -92,7 +92,7 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
 
         setFragmentResultListener(ChoseCategoryDialog.CHOOSE_CATEGORY_KEY) { _, bundle ->
             @Suppress("UNCHECKED_CAST")
-            viewModel.applyCategories(bundle.getStringArrayList(ChoseCategoryDialog.SELECTED_CATEGORIES)!!.toList())
+            viewModel.applyCategories(bundle[ChoseCategoryDialog.SELECTED_CATEGORIES] as List<String>)
         }
 
         suggestionsAdapter = SimpleCursorAdapter(
