@@ -4,10 +4,7 @@ import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 import ru.skillbranch.skillarticles.data.models.User
-import ru.skillbranch.skillarticles.data.remote.req.EditProfileReq
-import ru.skillbranch.skillarticles.data.remote.req.LoginReq
-import ru.skillbranch.skillarticles.data.remote.req.MessageReq
-import ru.skillbranch.skillarticles.data.remote.req.RefreshReq
+import ru.skillbranch.skillarticles.data.remote.req.*
 import ru.skillbranch.skillarticles.data.remote.res.*
 
 interface RestService {
@@ -77,9 +74,31 @@ interface RestService {
         @Header ("Authorization") token: String?
     ): UploadRes
 
+    //https://skill-articles.skill-branch.ru/api/v1/profile/avatar/remove
     @PUT("profile/avatar/remove")
-    suspend fun removeProfileAvatar(@Header("Authorization") auth: String?): UploadRes
+    suspend fun remove(
+        @Header("Authorization") accessToken: String?
+    ): UploadRes
 
     @PUT("profile")
     suspend fun editProfile(@Body editProfileReq: EditProfileReq, @Header("Authorization") auth: String?): User
+
+    // Authorisation
+    //https://skill-articles.skill-branch.ru/api/v1/auth/register
+    @POST("auth/register")
+    suspend fun register(@Body loginReq: RegistrationReq): AuthRes
+    // Profile
+    //https://skill-articles.skill-branch.ru/api/v1/profile
+    @GET("profile")
+    suspend fun loadProfile(
+        @Header("Authorization") accessToken: String
+    ): ProfileRes
+
+    //https://skill-articles.skill-branch.ru/api/v1/profile
+    @PUT("profile")
+    suspend fun updateProfile(
+        @Body profileInfo: EditProfileReq,
+        @Header("Authorization") accessToken: String
+    ): ProfileRes
+
 }

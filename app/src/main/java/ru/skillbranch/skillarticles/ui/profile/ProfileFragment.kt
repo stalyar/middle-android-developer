@@ -59,7 +59,7 @@ class ProfileFragment() : BaseFragment<ProfileViewModel>() {
         testRegistry: ActivityResultRegistry? = null,
         mockFactory: ((SavedStateRegistryOwner) -> ViewModelProvider.Factory)? = null
     ) : this() {
-        //_mockRoot = mockRoot
+        _mockRoot = mockRoot
         _mockFactory = mockFactory
         if (testRegistry != null) resultRegistry = testRegistry
     }

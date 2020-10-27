@@ -112,7 +112,9 @@ class ProfileViewModel(handle: SavedStateHandle) : BaseViewModel<ProfileState>(h
     }
 
     fun handleDeleteAction() {
-        //TODO remove avatar on server
+        launchSafety {
+            repository.removeAvatar()
+        }
     }
 
     fun handleGalleryAction() {

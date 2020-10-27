@@ -26,7 +26,7 @@ object ProfileRepository : IRepository {
     }
 
     override suspend fun removeAvatar() {
-        network.removeProfileAvatar(prefs.accessToken)
+        network.remove(prefs.accessToken)
         prefs.profile = prefs.profile!!.copy(avatar = "")
     }
 

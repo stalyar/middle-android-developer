@@ -1,6 +1,7 @@
 package ru.skillbranch.skillarticles.data.remote.req
 
-data class EditProfileReq (
+data class RegistrationReq(
     val name: String,
-    val about: String
+    val email: String,
+    val password: String
 )
