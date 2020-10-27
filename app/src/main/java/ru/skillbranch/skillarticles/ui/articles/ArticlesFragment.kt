@@ -57,7 +57,7 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
                 R.drawable.ic_filter_list_black_24dp,
                 null
             ) {
-                val action = ArticlesFragmentDirections.chooseCategory(
+                val action = ArticlesFragmentDirections.choseCategory(
                     binding.selectedCategories.toTypedArray(),
                     binding.categories.toTypedArray()
                 )
